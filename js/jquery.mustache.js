@@ -53,7 +53,7 @@
             $.error('TemplateName: ' + templateName + ' is already mapped.');
             return;
         }
-        templateMap[templateName] = $.trim(templateHtml);
+        templateMap[templateName] = templateHtml.trim();
     }
 
     /**
