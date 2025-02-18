@@ -30,12 +30,13 @@
         <li>\
         <div class='question-wrapper'>\
         <h4 id='question-{{id}}'>{{question}}</h4>\
-        <a aria-haspopup='true' class='popup' data-hidden='true' href='#explanation-{{id}}''>\
-            <span class='fa fa-info-circle' aria-hidden='true'></span>\
-            <span class='sr-only'>More info about {{question}}</span>\
+        <a class='control-indicator' data-bs-toggle='collapse' href='#explanation-{{id}}' role='button' aria-expanded='false' aria-controls='explanation-{{id}}'>\
+            <span class='sr-only'>Expand {{question}}</span>\
         </a>\
         </div>\
-        <div class='help' id='explanation-{{id}}'><h3>{{question}}</h3><p>{{{description}}}</p></div>\
+        <div class='collapse' id='explanation-{{id}}'>\
+            <div class='explanation'>{{{description}}}</div>\
+        </div>\
         <fieldset aria-labelledby='question-{{id}}'>\
         {{#choices}}\
             <div class='checkbox' facetid='{{id}}'>\
@@ -100,7 +101,7 @@
 
     // read the data from JSON endpoints
 
-    $.getJSON( "/rest/finder_settings", function( response ) {
+    $.getJSON( drupalSettings.path.baseUrl + "rest/finder_settings", function( response ) {
         //alert(JSON.stringify(response));
         $('#pagetitle').html(response.title.replace(/(?:\r\n|\r|\n)/g, '<br />'));
         $('#pagesubtitle').html(response.subtitle.replace(/(?:\r\n|\r|\n)/g, '<br />'));
@@ -109,6 +110,7 @@
         $('#pagechartheader').html(response.chart_header.replace(/(?:\r\n|\r|\n)/g, '<br />'));
         $('#pageemailformheader').html(response.email_form_header.replace(/(?:\r\n|\r|\n)/g, '<br />'));
         //$('#pageemailaddress').html(response.data.email_address);
+        contact_email = response.email_address;
         //$('#pageemailname').html(response.data.email_name);
         //$('#pageemailbody').html(response.email_body.replace(/(?:\r\n|\r|\n)/g, '<br />'));
         $('#pagemainheader').html(response.main_header.replace(/(?:\r\n|\r|\n)/g, '<br />'));
@@ -117,7 +119,7 @@
     });
 
 
-    $.getJSON( "/rest/facettree", function( response ) {
+    $.getJSON( drupalSettings.path.baseUrl + "rest/facettree", function( response ) {
 
         // JSON responses are automatically parsed.
 
@@ -208,7 +210,7 @@
 
 
     // load the services
-    $.getJSON( "/rest/servicelist", function( responseb ) {
+    $.getJSON( drupalSettings.path.baseUrl + "rest/servicelist", function( responseb ) {
         services = responseb;
         //servicelist = responseb.data;
 
@@ -569,11 +571,11 @@ function validateEmail(Email) {
             emailaddresses.push(email);
         }
         if ($("#emailtordmsg").prop("checked")) {
-            emailaddresses.push("rich.marisa@gmail.com"); // rdmsg-services@cornell.edu
+            emailaddresses.push(contact_email);
         }
         if (emailaddresses.length > 0) {
             var csrf_token;
-            $.getJSON( "/rest/session/token", function( response ) {
+            $.getJSON( drupalSettings.path.baseUrl + "rest/session/token", function( response ) {
                 csrf_token = response.data;
             });
 
