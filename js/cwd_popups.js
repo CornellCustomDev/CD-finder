@@ -336,13 +336,17 @@ jQuery(document).ready(function($) {
 	//popups(); // process the page
 
 	/* Data Storage Tool: Delay popups init until the table is rendered by app.js */
-  var popup_ran_once = false;
-  $('#comparisonchart').on('DOMSubtreeModified', function(){
-    if (!popup_ran_once) {
-      popups();
-      popup_ran_once = true;
+    function waitForChart() {
+        var interval = setInterval(() => {
+            var element = document.querySelector('#comparisonchart');
+            if (element.hasChildNodes()) {
+                clearInterval(interval);
+                popups();
+            }
+        }, 100);
     }
-  });
+
+    waitForChart();
 
 	/* -----------------------------------------------------------------------------------------
 		Generate Popup Controls
